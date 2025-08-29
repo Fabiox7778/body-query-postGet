@@ -1,10 +1,11 @@
 {
   "name": "body-query",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "cls && nodemon.js"
+    "dev": "cls && node server.js"
   },
   "keywords": [
     "body",
@@ -15,10 +16,10 @@
   ],
   "author": "Fabio Trevizolli",
   "license": "MIT",
-  "description": "",
+  "description": "Projeto exemplo para filtros HTTP - POST & GET.",
   "dependencies": {
     "dotenv": "^17.2.1",
-    "espress": "^0.0.0",
+    "express": "^5.1.0",
     "nodemon": "^3.1.10"
   }
 }
