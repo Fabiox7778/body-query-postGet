@@ -1,0 +1,24 @@
+{
+  "name": "body-query",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "cls && nodemon.js"
+  },
+  "keywords": [
+    "body",
+    "query",
+    "post",
+    "get",
+    "SENAI"
+  ],
+  "author": "Fabio Trevizolli",
+  "license": "MIT",
+  "description": "",
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "espress": "^0.0.0",
+    "nodemon": "^3.1.10"
+  }
+}
