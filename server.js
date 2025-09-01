@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 
 import dados from "./src/data/dados.js";
+import res from "express/lib/response.js";
 const { bruxos, varinhas, animais, pocoes } = dados;
 
 const app = express();
@@ -71,15 +72,59 @@ app.post('/bruxos', (req, res) => {
     }); 
 });
 
+app.get("/stats", (req, res) => {
+  const {casa} = req.query
+  let resultado = bruxos;
+  if (casa) {
+      resultado = resultado.filter((b) => b.casa.toLowerCase().includes(casa.toLowerCase()));
+      
+      res.status(200).json({
+      bruxos: `A casa ${casa} tem ${resultado.length} bruxos`
+  })
+  }
+ const contagemMateriais = {};
+  for (let i = 0; i < varinhas.length; i++) {
+      const varinha = varinhas[i];
+      const material = varinha.material;
+      if (contagemMateriais[material]) {
+          contagemMateriais[material]++;
+      } else {
+          contagemMateriais[material] = 1;
+      }
+  }
+
+  let materialMaisComum;
+  let maxContagem = 0;
+
+  for (const material in contagemMateriais) {
+      if (contagemMateriais[material] > maxContagem) {
+          maxContagem = contagemMateriais[material];
+          materialMaisComum = material;
+      }
+  }
+
+  if(contagemMateriais) {
+      res.status(200).json({
+          resultado: `O material de varinha mais usado é ${materialMaisComum}`
+      })
+  }
+
+});
+
+
 app.get('/varinhas', (req, res) => {
-  const { material, nucleo } = req.query;
-    let resultado = bruxos;
+  const { material, nucleo, comprimento } = req.query;
+    let resultado = varinhas;
   
     if (material) {
       resultado = resultado.filter(b => b.material.toLowerCase() === material.toLowerCase());
     }
   
     if (nucleo) {
+      resultado = resultado.filter(b => b.nucleo.toLowerCase() === nucleo.toLowerCase());
+    }
+
+    if (comprimento) {
       resultado = resultado.filter(b => b.nucleo == nucleo);
     }
   
@@ -90,7 +135,7 @@ app.get('/varinhas', (req, res) => {
 });
 
 app.post('/varinhas', (req, res) => {
-  const { material, nucleo } = req.body;
+  const { material, nucleo, comprimento  } = req.body;
   
 
   if (!material || !nucleo) {
@@ -120,11 +165,11 @@ app.get('/pocoes', (req, res) => {
     let resultado = pocoes;
   
     if (nome) {
-      resultado = resultado.filter(b => b.nome.toLowerCase() === nome.toLowerCase());
+      resultado = resultado.filter(b => b.nome.toLowerCase().includes(nome.toLowerCase()));
     }
   
     if (efeito) {
-      resultado = resultado.filter(b => b.efeito == efeito);
+      resultado = resultado.filter(b => b.efeito.toLowerCase().includes(efeito.toLowerCase()));
     }
   
     res.status(200).json({
@@ -160,14 +205,14 @@ const novaPocao = {
 
 app.get('/animais', (req, res) => {
   const { nome, tipo } = req.query;
-    let resultado = pocoes;
+    let resultado = animais;
   
     if (nome) {
       resultado = resultado.filter(b => b.nome.toLowerCase() === nome.toLowerCase());
     }
   
     if (tipo) {
-      resultado = resultado.filter(b => b.efeito == efeito);
+      resultado = resultado.filter(b => b.tipo == tipo);
     }
   
     res.status(200).json({
@@ -200,6 +245,8 @@ const novoAnimal = {
       data: novoAnimal
   }); 
 });
+
+
 
 // Iniciar servidor escutando na porta definida
 app.listen(serverPort, () => {

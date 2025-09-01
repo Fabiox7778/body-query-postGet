@@ -216,7 +216,7 @@ const animais = [
   {
     id: 1,
     nome: "Coruja",
-    tipo: "Correio/Companhia"
+    tipo: "Companhia"
   },
   {
     id: 2,
