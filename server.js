@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 
 import dados from "./src/data/dados.js";
-const { bruxos } = dados;
+const { bruxos, varinhas, animais, pocoes } = dados;
 
 const app = express();
 app.use(express.json());
@@ -41,7 +41,6 @@ app.get('/bruxos', (req, res) => {
 });
 
 app.post('/bruxos', (req, res) => {
-    // Acessando dados do body
     const { nome, casa, ano, varinha, mascote, patrono, especialidade, vivo } = req.body;
 
     if (!nome || !casa) {
@@ -71,6 +70,53 @@ app.post('/bruxos', (req, res) => {
         data: novoBruxo
     }); 
 });
+
+app.get('/varinhas', (req, res) => {
+  const { material, nucleo } = req.query;
+    let resultado = bruxos;
+  
+    if (material) {
+      resultado = resultado.filter(b => b.material.toLowerCase() === material.toLowerCase());
+    }
+  
+    if (nucleo) {
+      resultado = resultado.filter(b => b.nucleo == nucleo);
+    }
+  
+    res.status(200).json({
+      total: resultado.length,
+      data: resultado
+    });
+});
+
+app.post('/varinhas', (req, res) => {
+  const { material, nucleo } = req.body;
+  
+
+  if (!material || !nucleo) {
+      return res.status(400).json({
+          success: false,
+          message: "Material e nucleo são obrigatórios para uma varinha!"
+      });
+}
+
+const novaVarinha = {
+      id: varinhas.length + 1,
+      material,
+      nucleo,
+      comprimento
+  };
+
+  bruxos.push(novaVarinha);
+  res.status(201).json({
+      success: true,
+      message: "Nova varinha adicionada ao arsenal!",
+      data: novaVarinha
+  }); 
+});
+
+
+
 
 // Iniciar servidor escutando na porta definida
 app.listen(serverPort, () => {
