@@ -158,6 +158,49 @@ const novaPocao = {
   }); 
 });
 
+app.get('/animais', (req, res) => {
+  const { nome, tipo } = req.query;
+    let resultado = pocoes;
+  
+    if (nome) {
+      resultado = resultado.filter(b => b.nome.toLowerCase() === nome.toLowerCase());
+    }
+  
+    if (tipo) {
+      resultado = resultado.filter(b => b.efeito == efeito);
+    }
+  
+    res.status(200).json({
+      total: resultado.length,
+      data: resultado
+    });
+});
+
+app.post('/animais', (req, res) => {
+  const { nome, tipo } = req.body;
+  
+
+  if (!nome || !tipo) {
+      return res.status(400).json({
+          success: false,
+          message: "Nome e tipo são obrigatórios para um animal!"
+      });
+}
+
+const novoAnimal = {
+      id: animais.length + 1,
+      nome,
+      tipo
+  };
+
+  bruxos.push(novoAnimal);
+  res.status(201).json({
+      success: true,
+      message: "Novo animal adicionada ao zoológico!",
+      data: novoAnimal
+  }); 
+});
+
 // Iniciar servidor escutando na porta definida
 app.listen(serverPort, () => {
     console.log(`🚀 Servidor rodando em http://localhost:${serverPort} 🚀`);
