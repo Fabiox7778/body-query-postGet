@@ -115,8 +115,48 @@ const novaVarinha = {
   }); 
 });
 
+app.get('/pocoes', (req, res) => {
+  const { nome, efeito } = req.query;
+    let resultado = pocoes;
+  
+    if (nome) {
+      resultado = resultado.filter(b => b.nome.toLowerCase() === nome.toLowerCase());
+    }
+  
+    if (efeito) {
+      resultado = resultado.filter(b => b.efeito == efeito);
+    }
+  
+    res.status(200).json({
+      total: resultado.length,
+      data: resultado
+    });
+});
 
+app.post('/pocoes', (req, res) => {
+  const { nome, efeito } = req.body;
+  
 
+  if (!nome || !efeito) {
+      return res.status(400).json({
+          success: false,
+          message: "Nome e efeito são obrigatórios para uma poção!"
+      });
+}
+
+const novaPocao = {
+      id: pocoes.length + 1,
+      nome,
+      efeito
+  };
+
+  bruxos.push(novaPocao);
+  res.status(201).json({
+      success: true,
+      message: "Nova poção adicionada ao arsenal!",
+      data: novaPocao
+  }); 
+});
 
 // Iniciar servidor escutando na porta definida
 app.listen(serverPort, () => {
